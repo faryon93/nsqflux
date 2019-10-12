@@ -1,0 +1,11 @@
+nsq:
+  lookupd: localhost:4161
+
+forward:
+  - topic: "nsq:topic_name:channel_name"
+    influx:
+      addr: http://localhost:8086
+      user: username
+      password: password
+      database: influx_db
+      measurement: measurement_name
