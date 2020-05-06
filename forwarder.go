@@ -97,8 +97,17 @@ func (f *Forwarder) Handle() queue.HandlerFunc {
 	log := logrus.WithField("topic", f.GetTopic())
 	parser := payload.NewParser(log, f.Influx.Database, f.Influx.Measurement)
 	return func(msg *nsq.Message) error {
-		batch := parser.ToBatchPoints(msg)
-		if len(batch.Points()) < 1 {
+		batch, err := parser.ToBatchPoints(msg)
+		if err != nil {
+			// Return nil in order to discard the message.
+			// This behaviour is ok, because whe parsing fails once
+			// it will fail the next time too.
+			log.Errorln("discarding invalid message:", err.Error())
+			return nil
+		}
+
+		// Ignore empty batches. InfluxDB will throw an error otherwise.
+		if batch == nil || len(batch.Points()) < 1 {
 			return nil
 		}
 

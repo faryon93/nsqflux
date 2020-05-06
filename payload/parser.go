@@ -65,11 +65,10 @@ func NewParser(log *logrus.Entry, database string, measurement string) *Parser {
 	}
 }
 
-func (p *Parser) ToBatchPoints(msg *nsq.Message) influx.BatchPoints {
+func (p *Parser) ToBatchPoints(msg *nsq.Message) (influx.BatchPoints, error) {
 	json, err := parsers.Get().ParseBytes(msg.Body)
 	if err != nil {
-		p.log.Errorln("discarding invalide message:", err.Error())
-		return nil
+		return nil, err
 	}
 
 	// process the request
@@ -79,7 +78,7 @@ func (p *Parser) ToBatchPoints(msg *nsq.Message) influx.BatchPoints {
 	})
 	p.process(batch, json, time.Unix(0, msg.Timestamp))
 
-	return batch
+	return batch, nil
 }
 
 // ---------------------------------------------------------------------------------------
