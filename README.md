@@ -5,7 +5,7 @@
 {"_measurement":  "my-sensors", "_timestamp":  123456789, "tag":  "tag-value", "value":  555}
 ```
 The field `_measurement` overrides the configured default influxdb measurment name.
-If no `_timestamp` field (unix time in milliseconds) is presentm, the server assigns the timestamp on reception.
+If no `_timestamp` field (unix time in milliseconds) is present, the server assigns the timestamp on reception.
 
 If an array of objects is provided, each element is inserted as a single datapoint. 
 ```json
