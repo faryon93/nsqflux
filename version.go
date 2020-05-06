@@ -23,7 +23,7 @@ package main
 var (
 	// release information
 	AppName    = "nsqflux"
-	AppVersion = "0.1"
+	AppVersion = "0.2"
 
 	// filled by build tool
 	GitCommit   string
