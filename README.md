@@ -7,6 +7,9 @@
 The field `_measurement` overrides the configured default influxdb measurment name.
 If no `_timestamp` field (unix time in milliseconds) is present, the server assigns the timestamp on reception.
 
+Numerical values are stored as value fields and string values are stored as measurement tags. 
+To override this behaviour, one can prefix the value name with the `$` character in order to treat strings as values.
+
 If an array of objects is provided, each element is inserted as a single datapoint. 
 ```json
 [

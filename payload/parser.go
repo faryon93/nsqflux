@@ -22,6 +22,7 @@ package payload
 
 import (
 	"fmt"
+	"strings"
 	"time"
 
 	influx "github.com/influxdata/influxdb1-client/v2"
@@ -33,6 +34,8 @@ import (
 const (
 	KeyMeasurement = "_measurement"
 	KeyTimestamp   = "_timestamp"
+
+	FieldOverride = "$"
 )
 
 // ---------------------------------------------------------------------------------------
@@ -116,8 +119,14 @@ func (p *Parser) process(bt influx.BatchPoints, v *fastjson.Value, time time.Tim
 			}
 
 			if v.Type() == fastjson.TypeString { // string -> tag
-				tags[keyName] = v.String()
-
+				// When a property name starts with a '$' character the user
+				// wants to override the "strig = tag" association.
+				// The Property is treated as a measurment field.
+				if strings.HasPrefix(keyName, FieldOverride) {
+					fields[strings.Trim(keyName, FieldOverride)] = v.String()
+				} else {
+					tags[keyName] = v.String()
+				}
 			} else if v.Type() == fastjson.TypeNumber { // number -> field value
 				val, _ := v.Float64()
 				fields[keyName] = val
