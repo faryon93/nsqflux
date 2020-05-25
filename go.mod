@@ -1,5 +1,7 @@
 module github.com/faryon93/nsqflux
 
+go 1.14
+
 require (
 	github.com/faryon93/util v1.0.3
 	github.com/golang/snappy v0.0.1 // indirect
